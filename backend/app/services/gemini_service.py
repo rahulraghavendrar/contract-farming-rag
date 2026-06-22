@@ -13,22 +13,61 @@ model = genai.GenerativeModel(
     "gemini-2.5-flash"
 )
 
-def generate_answer(context,question):
+def generate_answer(context, question):
 
-    prompt=f"""
+    prompt = f"""
+You are an expert PDF Document Analysis Assistant.
+
+Answer the user's question using ONLY the provided document context.
+
 Context:
-
 {context}
 
 Question:
-
 {question}
 
-Answer only using the context.
+Instructions:
+- Use markdown formatting.
+- Use emojis.
+- Use proper headings.
+- Use bullet points.
+- Highlight important information.
+- Do not hallucinate.
+- If the answer is not present in the document, say:
+  "❌ This information is not available in the uploaded document."
+
+Format:
+
+# 📌 Summary
+
+- Point 1
+- Point 2
+
+# 🔍 Key Points
+
+- Point 1
+- Point 2
+
+# ⚠️ Important Information
+
+- Point 1
+- Point 2
+
+# 📖 Detailed Explanation
+
+Detailed explanation here.
+
+Answer:
 """
 
-    response=model.generate_content(
-        prompt
-    )
+    try:
 
-    return response.text
+        response = model.generate_content(
+            prompt
+        )
+
+        return response.text
+
+    except Exception as e:
+
+        return f"❌ Gemini Error: {str(e)}"
